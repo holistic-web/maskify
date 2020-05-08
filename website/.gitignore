@@ -19,3 +19,7 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+
+# Firebase local debug files
+firebase-debug.log
+hosting.*.cache
