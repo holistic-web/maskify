@@ -9,12 +9,12 @@ Allows a user to upload a photo (or provide a url) to a photo. [It then calls a 
 
 ## Developing Locally
 1. install dependencies
-	```
+	```bash
 	npm install
 	```
 
 2. run in local development mode
-	```
+	```bash
 	npm run serve
 	```
 
