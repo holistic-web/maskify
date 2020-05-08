@@ -1,7 +1,8 @@
 <template>
 	<div id="app">
-		<el-layout>
-			<img alt="Vue logo" src="./assets/logo.png">
+		<el-layout
+			title="Maskify"
+			subtitle="a holistic project">
 			<HelloWorld msg="Welcome to Your Vue.js App"/>
 		</el-layout>
 	</div>
