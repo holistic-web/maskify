@@ -49,7 +49,7 @@ export default {
 	align-items: center;
 
 	&__image {
-		width: 100px;
+		width: 125px;
 		height: auto;
 	}
 }

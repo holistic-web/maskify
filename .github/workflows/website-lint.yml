@@ -1,4 +1,4 @@
-name: lint-website
+name: website-lint
 
 on:
   push:
