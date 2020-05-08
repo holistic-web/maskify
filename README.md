@@ -1,6 +1,12 @@
 # Maskify
 A key tool in our fight against coronavirus.
 
+_from
+<img width="150" src="https://github.com/holistic-web/maskify/raw/master/assets/no-mask.png">
+to
+<img width="150" src="https://github.com/holistic-web/maskify/raw/master/assets/mask.png">
+🥳_
+
 ## Factsheet
 | **Category**         | **Value**                |
 |----------------------|--------------------------|
