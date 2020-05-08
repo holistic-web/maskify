@@ -1,5 +1,5 @@
 # Website
-Allows a user to upload a photo (or provide a url) to a photo. [It then calls a cloud function to get facial recognition data for that image, and overlays a mask on the original image using this data.]
+Allows a user to upload a photo (or provide a url) to a photo. It [will then] then calls a cloud function to get facial recognition data for that image, and overlays a mask on the original image using this data.
 
 ## Factsheet
 | **Category**            | **Value**                 |
