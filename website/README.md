@@ -24,5 +24,7 @@ This project is supported by continous integreation in the following ways:
 ### on commit to any branch but master
 Github Actions will run `npm run lint` to confirm no linting errors have been made. If any errors are found the linter will attempt to automatically fix the issue and commit the change to the branch.
 
+See `.github/lint-website.yml`.
+
 ### on commit to master branch
 Github Actions will run `npm run build` and `firebase deploy` to publish the latest version of the site.
