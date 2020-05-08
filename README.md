@@ -14,7 +14,6 @@ to
 | **Firebase project** | maskify-f6f41            |
 
 ## Roadmap
-- website is automatically deployed on merge to master branch
 - functions are automatically deployed on merge to master branch
 - functions are automatically linted on merge to any branch but master
 - user can add a photo to the website by URL

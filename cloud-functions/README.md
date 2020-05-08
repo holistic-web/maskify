@@ -1,2 +1,13 @@
-# Maskify Functions
-This folder contains the cloud functions for the Maskify project. They are being built using Firebase.
+# Cloud Functions
+Provides a cloud function to identify where best to place a mask on the image to support the Maskify website.
+
+## Factsheet
+| **Category**            | **Value**                |
+|-------------------------|--------------------------|
+| **Project Type**        | Firebase Cloud functions |
+
+## Developing Locally
+_TBC._
+
+## Continous Integration
+_TBC._
