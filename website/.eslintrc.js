@@ -5,7 +5,7 @@ module.exports = {
 	},
 	extends: [
 		'plugin:vue/essential',
-		'@vue/airbnb',
+		'@holistic-web/eslint-config'
 	],
 	parserOptions: {
 		parser: 'babel-eslint',
