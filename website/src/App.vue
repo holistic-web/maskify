@@ -3,20 +3,22 @@
 		<el-layout
 			title="Maskify"
 			subtitle="a holistic project">
-			<HelloWorld msg="Welcome to Your Vue.js App"/>
+
+			<maskify/>
+
 		</el-layout>
 	</div>
 </template>
 
 <script>
 import { ElLayout } from '@holistic-web/el-layout';
-import HelloWorld from './components/HelloWorld.vue';
+import Maskify from './components/Maskify.vue';
 
 export default {
 	name: 'App',
 	components: {
 		ElLayout,
-		HelloWorld
+		Maskify
 	}
 };
 </script>
