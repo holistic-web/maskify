@@ -5,7 +5,7 @@ on:
     branches:
     - master
     paths:
-    - 'website/**'
+    - 'cloud-functions/**'
 
 jobs:
   build-and-deploy:
@@ -23,12 +23,6 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-
-    - name: Build project
-      run: |
-        cd website
-        npm ci
-        npm run build
 
     - name: Deploy to Firebase
       uses: w9jds/firebase-action@master
