@@ -27,7 +27,7 @@ import firebase from 'firebase';
 import ImageUploader from './ImageUploader.vue';
 import ImageMasker from './ImageMasker.vue';
 
-const IMAGE_SIZE = 128;
+const IMAGE_SIZE = 512;
 
 export default {
 	components: {
@@ -47,7 +47,6 @@ export default {
 			const getFacialRecognitionData = firebase.functions().httpsCallable('getFacialRecognitionData');
 			const { data } = await getFacialRecognitionData(url);
 			this.imageData = data;
-			console.log('this.imageData: ', this.imageData);
 		}
 	}
 };
