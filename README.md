@@ -14,8 +14,6 @@ to
 | **Firebase project** | maskify-f6f41            |
 
 ## Roadmap
-- functions are automatically deployed on merge to master branch
-- functions are automatically linted on merge to any branch but master
 - user can add a photo to the website by URL
 - user can add a photo to the website by uploading
 - firebase cloud function can get result from google vision api for photo
