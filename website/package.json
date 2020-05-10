@@ -10,6 +10,8 @@
 	"dependencies": {
 		"@holistic-web/el-layout": "0.0.6",
 		"core-js": "^3.6.4",
+		"firebase": "^7.14.3",
+		"uuid": "^8.0.0",
 		"vue": "^2.6.11",
 		"vue-image-upload-resize": "^2.3.0"
 	},

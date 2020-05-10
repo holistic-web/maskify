@@ -5,7 +5,13 @@
 			A key tool in our fight against the coronavirus...
 		</p>
 
-		<image-uploader/>
+		<image-uploader
+			class="Maskify__uploader"
+			@uploaded="onImageUpload"/>
+
+		<p v-if="imageId">
+			Image ID is: "{{imageId}}".
+		</p>
 	</div>
 </template>
 
@@ -18,10 +24,14 @@ export default {
 	},
 	data() {
 		return {
-			progress: {
-				imageAdded: false
-			}
+			imageId: null
 		};
+	},
+	methods: {
+		onImageUpload(id) {
+			console.log('id: ', id);
+			this.imageId = id;
+		}
 	}
 };
 </script>
@@ -34,6 +44,10 @@ export default {
 
 	&__summary {
 		margin-bottom: 2rem;
+	}
+
+	&__uploader {
+		margin-bottom: 1rem;
 	}
 }
 </style>
