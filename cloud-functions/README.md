@@ -20,4 +20,4 @@ See `.github/workflows/functions-lint.yml`.
 ### on commit to master branch
 Github Actions will run `firebase deploy` to publish the latest version of the functions. It relies on the `FIREBASE_TOKEN` secret being available in github.
 
-See `.github/workflows/functions-deploy.yml`!
+See `.github/workflows/functions-deploy.yml`.
