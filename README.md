@@ -14,7 +14,6 @@ to
 | **Firebase project** | maskify-f6f41            |
 
 ## Roadmap
-- user can add a photo to the website by URL
 - firebase cloud function can get result from google vision api for photo
 - website can get result from firebase cloud function and add mask to image with default position
 - user can change mask and adjust position
