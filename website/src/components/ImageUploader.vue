@@ -1,21 +1,35 @@
 <template>
 	<div class="ImageUploader">
-		<h3 class="ImageUploader__title">Upload an image</h3>
+		<h3 class="ImageUploader__title">Select an image:</h3>
 
 		<el-error
 			v-if="error"
 			class="ImageUploader__error"
 			:message="error"/>
 
-		<image-uploader
-			class="ImageUploader__uploader"
-			:maxWidth="512"
-			:maxHeight="512"
-			:quality="0.9"
-			:autoRotate=true
-			:preview=true
-			:capture="true"
-			@input="onInput"/>
+		<section class="ImageUploader__inputs">
+			<image-uploader
+				class="ImageUploader__uploader"
+				:maxWidth="128"
+				:maxHeight="128"
+				:quality="0.9"
+				:autoRotate=true
+				:preview=false
+				:capture="true"
+				@input="onInput"/>
+
+			<div v-if="!localImage" class="ImageUploader__url">
+				<b-form-input
+					v-model="url"
+					placeholder="or enter an image url"/>
+				<b-btn
+					v-text="'Next'"
+					:disabled="!url"
+					@click="$emit('uploaded', url)"/>
+			</div>
+		</section>
+
+
 	</div>
 </template>
 
@@ -32,17 +46,22 @@ export default {
 	},
 	data() {
 		return {
-			error: null
+			error: null,
+			localImage: false,
+			url: ''
 		};
 	},
 	methods: {
 		async onInput(image) {
 			try {
-				const id = uuid();
+				this.localImage = true;
+				const id = `${uuid()}`;
 				const imageRef = firebase.storage().ref().child(id);
-				await imageRef.putString(image);
-				this.$emit('uploaded', id);
+				await imageRef.putString(image, 'data_url');
+				const url = await imageRef.getDownloadURL();
+				this.$emit('uploaded', url);
 			} catch (err) {
+				this.localImage = false;
 				this.error = err.message;
 			}
 		}
@@ -54,17 +73,25 @@ export default {
 <style lang="scss">
 @import '@holistic-web/el-layout/src/styles/theme';
 
+$spacing: 2rem;
+
 .ImageUploader {
 	display: flex;
 	flex-direction: column;
 
 	&__title {
 		color: $primary;
-		margin-bottom: 1rem;
+		margin-bottom: $spacing;
 	}
 
 	&__error {
-		margin-bottom: 1rem;
+		margin-bottom: $spacing;
+	}
+
+	&__inputs {
+		margin-bottom: $spacing;
+		display: flex;
+		flex-direction: row;
 	}
 
 	&__uploader {
@@ -73,6 +100,12 @@ export default {
 			margin-right: 1rem;
 		}
 
+	}
+
+	&__url {
+		display: flex;
+		flex-direction: row;
+		width: 100%;
 	}
 }
 

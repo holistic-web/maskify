@@ -6,12 +6,14 @@
 		</p>
 
 		<image-uploader
+			v-if="!imageUrl"
 			class="Maskify__uploader"
 			@uploaded="onImageUpload"/>
 
-		<p v-if="imageId">
-			Image ID is: "{{imageId}}".
-		</p>
+		<img
+			v-if="imageUrl"
+			class="Maskify__original"
+			:src="imageUrl"/>
 	</div>
 </template>
 
@@ -24,13 +26,12 @@ export default {
 	},
 	data() {
 		return {
-			imageId: null
+			imageUrl: null
 		};
 	},
 	methods: {
-		onImageUpload(id) {
-			console.log('id: ', id);
-			this.imageId = id;
+		onImageUpload(url) {
+			this.imageUrl = url;
 		}
 	}
 };
@@ -48,6 +49,11 @@ export default {
 
 	&__uploader {
 		margin-bottom: 1rem;
+	}
+
+	&__original {
+		width: 128px;
+		height: 128px;
 	}
 }
 </style>
