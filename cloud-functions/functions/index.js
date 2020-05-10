@@ -1,8 +1,4 @@
 const functions = require('firebase-functions');
 
-// Create and Deploy Your First Cloud Functions
-// https://firebase.google.com/docs/functions/write-firebase-functions
-
-exports.helloWorld = functions.https.onCall((request, response) => {
-	response.send('Hello from Firebase!');
-});
+exports.getFacialRecognitionData = functions.https.onCall(url => `I can't find a face in ${url}`);
+// TODO make a call to google vision API with image url

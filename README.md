@@ -18,3 +18,4 @@ to
 - website can get result from firebase cloud function and add mask to image with default position
 - user can change mask and adjust position
 - user can download / share final photo
+- old files should clean themselves up after a set time period.

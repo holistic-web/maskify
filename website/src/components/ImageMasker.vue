@@ -16,9 +16,19 @@ export default {
 		url: {
 			type: String,
 			required: true
+		},
+		data: {
+			type: String, // TODO: switch type to object and use facial recognition data to add mask
+			requied: true
 		}
 	}
 };
+
+// TODO use mask images in 'src/assets' folder to overlay mask on image
+// TODO allow user to adjust mask positioning
+// TODO default positioning to values in 'data' prop
+// TODO allow user to save the image
+// TODO host the image and allow user to share the image to get us more clicks
 </script>
 
 <style lang="scss">

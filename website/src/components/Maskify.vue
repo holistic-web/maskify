@@ -10,14 +10,20 @@
 			:imageSize="imageSize"
 			@uploaded="onImageUpload"/>
 
+		<span v-if="imageUrl && !imageData">
+			Processing...
+		</span>
+
 		<image-masker
-			v-if="imageUrl"
+			v-if="imageData"
 			:imageSize="imageSize"
-			:url="imageUrl"/>
+			:url="imageUrl"
+			:data="imageData"/>
 	</div>
 </template>
 
 <script>
+import firebase from 'firebase';
 import ImageUploader from './ImageUploader.vue';
 import ImageMasker from './ImageMasker.vue';
 
@@ -31,12 +37,17 @@ export default {
 	data() {
 		return {
 			imageSize: IMAGE_SIZE,
-			imageUrl: null
+			imageUrl: null,
+			imageData: null
 		};
 	},
 	methods: {
-		onImageUpload(url) {
+		async onImageUpload(url) {
 			this.imageUrl = url;
+			const getFacialRecognitionData = firebase.functions().httpsCallable('getFacialRecognitionData');
+			const { data } = await getFacialRecognitionData(url);
+			this.imageData = data;
+			console.log('this.imageData: ', this.imageData);
 		}
 	}
 };
