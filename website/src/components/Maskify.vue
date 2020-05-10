@@ -2,30 +2,35 @@
 	<div class="Maskify">
 
 		<p class="Maskify__summary">
-			A key tool in our fight against the coronavirus...
+			A key tool in our fight against the coronavirus. Check us out on <a href="https://github.com/holistic-web/maskify">Github</a>!
 		</p>
 
 		<image-uploader
 			v-if="!imageUrl"
-			class="Maskify__uploader"
+			:imageSize="imageSize"
 			@uploaded="onImageUpload"/>
 
-		<img
+		<image-masker
 			v-if="imageUrl"
-			class="Maskify__original"
-			:src="imageUrl"/>
+			:imageSize="imageSize"
+			:url="imageUrl"/>
 	</div>
 </template>
 
 <script>
 import ImageUploader from './ImageUploader.vue';
+import ImageMasker from './ImageMasker.vue';
+
+const IMAGE_SIZE = 128;
 
 export default {
 	components: {
-		ImageUploader
+		ImageUploader,
+		ImageMasker
 	},
 	data() {
 		return {
+			imageSize: IMAGE_SIZE,
 			imageUrl: null
 		};
 	},
@@ -47,13 +52,5 @@ export default {
 		margin-bottom: 2rem;
 	}
 
-	&__uploader {
-		margin-bottom: 1rem;
-	}
-
-	&__original {
-		width: 128px;
-		height: 128px;
-	}
 }
 </style>

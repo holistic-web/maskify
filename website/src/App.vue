@@ -3,7 +3,9 @@
 		<el-layout
 			title="Maskify"
 			subtitle="a holistic project">
+
 			<maskify/>
+
 		</el-layout>
 	</div>
 </template>

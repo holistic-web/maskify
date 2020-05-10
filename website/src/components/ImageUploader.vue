@@ -10,8 +10,8 @@
 		<section class="ImageUploader__inputs">
 			<image-uploader
 				class="ImageUploader__uploader"
-				:maxWidth="128"
-				:maxHeight="128"
+				:maxWidth="imageSize"
+				:maxHeight="imageSize"
 				:quality="0.9"
 				:autoRotate=true
 				:preview=false
@@ -36,13 +36,19 @@
 <script>
 import firebase from 'firebase';
 import { v4 as uuid } from 'uuid';
-import ImageUploader from 'vue-image-upload-resize';
 import { ElError } from '@holistic-web/el-layout';
+import ImageUploader from 'vue-image-upload-resize';
 
 export default {
 	components: {
-		ImageUploader,
-		ElError
+		ElError,
+		ImageUploader
+	},
+	props: {
+		imageSize: {
+			type: Number,
+			required: true
+		}
 	},
 	data() {
 		return {
