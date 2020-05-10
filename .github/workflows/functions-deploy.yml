@@ -24,6 +24,11 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
+    - name: Install dependencies
+      run: |
+        cd cloud-functions/functions
+        npm ci
+
     - name: Deploy to Firebase
       uses: w9jds/firebase-action@master
       with:
