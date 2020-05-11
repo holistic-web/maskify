@@ -7,7 +7,7 @@ const client = new vision.ImageAnnotatorClient();
 exports.getFacialRecognitionData = functions.https.onCall(async url => {
 	try {
 		const [result] = await client.faceDetection(url);
-		console.log(Object.keys(result));
+		console.log(JSON.stringify(result, null, '\t'));
 		return result;
 	} catch (err) {
 		return err;
