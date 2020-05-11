@@ -8,8 +8,8 @@ exports.getFacialRecognitionData = functions.https.onCall(async url => {
 	try {
 		const result = await client.faceDetection(url);
 		console.log(Object.keys(result));
+		return result;
 	} catch (err) {
-		console.log('err', err);
-		console.log(`I can't find a face in ${url}`);
+		return err;
 	}
 });
