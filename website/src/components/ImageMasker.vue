@@ -20,7 +20,7 @@
 						v-model="maskSizing.leftOffset"
 						type="range"
 						min="0"
-						max="1"
+						max="2"
 						step="0.05"
 						@input="onValueChange"/>
 				</b-form-group>
@@ -33,7 +33,7 @@
 						v-model="maskSizing.topOffset"
 						type="range"
 						min="0"
-						max="1"
+						max="2"
 						step="0.05"
 						@input="onValueChange"/>
 				</b-form-group>
@@ -46,7 +46,7 @@
 						v-model="maskSizing.width"
 						type="range"
 						min="0"
-						max="1"
+						max="2"
 						step="0.05"
 						@input="onValueChange"/>
 				</b-form-group>
@@ -59,7 +59,7 @@
 						v-model="maskSizing.height"
 						type="range"
 						min="0"
-						max="1"
+						max="2"
 						step="0.05"
 						@input="onValueChange"/>
 				</b-form-group>
@@ -98,8 +98,8 @@ export default {
 			required: true
 		},
 		data: {
-			type: String, // TODO: switch type to object and use facial recognition data to add mask
-			requied: true
+			type: Object, // TODO: switch type to object and use facial recognition data to add mask
+			required: true
 		}
 	},
 	data() {
@@ -107,10 +107,10 @@ export default {
 			context: null,
 			originalDrawn: false,
 			maskSizing: {
-				leftOffset: 0.3,
-				topOffset: 0.4,
-				width: 0.5,
-				height: 0.2
+				leftOffset: 1,
+				topOffset: 1,
+				width: 1,
+				height: 1
 			}
 		};
 	},
@@ -125,12 +125,44 @@ export default {
 			);
 		},
 		drawMask(mask) {
+			const face = this.data.faceAnnotations;
+			let leftEarX = 0;
+			let rightEarX = 0;
+			let eyeMiddle = 0;
+			let chinLowest = 0;
+			// let mouthCentreX = 0;
+			let mouthCentreY = 0;
+			let toOffsetTop = 0;
+			let toOffsetLeft = 0;
+			let width = 0;
+			let height = 0;
+			face[0].landmarks.forEach(landmark => {
+				if (landmark.type === 'LEFT_EAR_TRAGION') {
+					leftEarX = landmark.position.x;
+				}
+				if (landmark.type === 'RIGHT_EAR_TRAGION') {
+					rightEarX = landmark.position.x;
+				}
+				if (landmark.type === 'MIDPOINT_BETWEEN_EYES') {
+					eyeMiddle = landmark.position.y;
+				}
+				if (landmark.type === 'CHIN_GNATHION') {
+					chinLowest = landmark.position.y;
+				}
+				if (landmark.type === 'MOUTH_CENTER') {
+					mouthCentreY = landmark.position.y;
+				}
+			});
+			width = rightEarX - leftEarX;
+			height = chinLowest - eyeMiddle;
+			toOffsetLeft = this.imageSize - rightEarX;
+			toOffsetTop = this.imageSize - mouthCentreY;
 			this.context.drawImage(
 				this.$refs[mask],
-				this.imageSize * this.maskSizing.leftOffset,
-				this.imageSize * this.maskSizing.topOffset,
-				this.imageSize * this.maskSizing.width,
-				this.imageSize * this.maskSizing.height
+				toOffsetLeft * this.maskSizing.leftOffset,
+				toOffsetTop * this.maskSizing.topOffset,
+				width * this.maskSizing.width,
+				height * this.maskSizing.height
 			);
 		},
 		onValueChange() {
