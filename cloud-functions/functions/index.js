@@ -1,4 +1,15 @@
 const functions = require('firebase-functions');
 
-exports.getFacialRecognitionData = functions.https.onCall(url => `I can't find a face in ${url}`);
-// TODO make a call to google vision API with image url
+const vision = require('@google-cloud/vision');
+
+const client = new vision.ImageAnnotatorClient();
+
+exports.getFacialRecognitionData = functions.https.onCall(async url => {
+	try {
+		const [result] = await client.faceDetection(url);
+		console.log(JSON.stringify(result, null, '\t'));
+		return result;
+	} catch (err) {
+		return err;
+	}
+});
