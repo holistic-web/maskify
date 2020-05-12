@@ -130,7 +130,6 @@ export default {
 			let rightEarX = 0;
 			let eyeMiddle = 0;
 			let chinLowest = 0;
-			// let mouthCentreX = 0;
 			let mouthCentreY = 0;
 			let toOffsetTop = 0;
 			let toOffsetLeft = 0;
