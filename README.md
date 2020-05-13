@@ -14,7 +14,6 @@ to
 | **Firebase project** | maskify-f6f41            |
 
 ## Roadmap
-- firebase cloud function can get result from google vision api for photo
 - website can get result from firebase cloud function and add mask to image with default position
 - user can select from an array of masks
 - user can download / share final photo
