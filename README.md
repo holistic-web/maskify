@@ -14,8 +14,6 @@ to
 | **Firebase project** | maskify-f6f41            |
 
 ## Roadmap
-- website can get result from firebase cloud function and add mask to image with default position
-- user can select from an array of masks
 - user can download / share final photo
 - old files should clean themselves up after a set time period
 - should still work without connection to cloud for local images
