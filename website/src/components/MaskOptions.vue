@@ -82,6 +82,12 @@
 			max="360"
 			step="1"
 			@input="onValueChange"/>
+
+		<b-btn
+			size="sm"
+			variant="danger"
+			v-text="'Remove mask'"
+			@click="$emit('delete')"/>
 	</div>
 </template>
 
