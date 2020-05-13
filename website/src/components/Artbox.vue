@@ -68,7 +68,6 @@ export default {
 			this.context.translate(-this.imageSize / 2, -this.imageSize / 2);
 		},
 		yFlipContext() {
-			this.context.translate(this.imageSize, 0);
 			this.context.scale(-1, 1);
 		},
 		drawOriginal() {
@@ -81,19 +80,25 @@ export default {
 			);
 		},
 		drawMask(mask) {
-			if (mask.rotationDeg) this.rotateContext(-mask.rotationDeg);
-			if (mask.flip) this.yFlipContext();
-			const leftOffset = this.imageSize * (mask.leftOffset - 0.5 * mask.width);
+			let leftOffset = this.imageSize * (mask.leftOffset - 0.5 * mask.width);
 			const topOffset = this.imageSize * (mask.topOffset - 0.5 * mask.height);
+			let width = this.imageSize * mask.width;
+			const height = this.imageSize * mask.height;
+			this.context.save();
+			if (mask.rotationDeg) this.rotateContext(-mask.rotationDeg);
+			if (mask.flip) {
+				this.context.scale(-1, 1);
+				width *= -1;
+				leftOffset *= -1;
+			}
 			this.context.drawImage(
 				this.$refs[mask.ref],
 				leftOffset,
 				topOffset,
-				this.imageSize * mask.width,
-				this.imageSize * mask.height
+				width,
+				height
 			);
-			if (mask.rotationDeg) this.rotateContext(mask.rotationDeg);
-			if (mask.flip) this.yFlipContext();
+			this.context.restore();
 		}
 	},
 	mounted() {
