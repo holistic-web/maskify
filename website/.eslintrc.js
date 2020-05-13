@@ -12,6 +12,8 @@ module.exports = {
 	},
 	rules: {
 		'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-		'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off'
+		'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+
+		'no-mixed-operators': 0	// Allow mixing '*' and '/' operators. Useful in image rotation.
 	}
 };
