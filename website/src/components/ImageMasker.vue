@@ -12,57 +12,10 @@
 
 			<section class="ImageMasker__controls">
 
-				<b-form-group
-					label="Left Offset"
-					label-for="leftOffset">
-					<b-form-input
-						id="leftOffset"
-						v-model="maskSizing.leftOffset"
-						type="range"
-						min="0"
-						max="1"
-						step="0.05"
-						@input="onValueChange"/>
-				</b-form-group>
-
-				<b-form-group
-					label="Top Offset"
-					label-for="topOffset">
-					<b-form-input
-						id="topOffset"
-						v-model="maskSizing.topOffset"
-						type="range"
-						min="0"
-						max="1"
-						step="0.05"
-						@input="onValueChange"/>
-				</b-form-group>
-
-				<b-form-group
-					label="Width"
-					label-for="width">
-					<b-form-input
-						id="width"
-						v-model="maskSizing.width"
-						type="range"
-						min="0"
-						max="1"
-						step="0.05"
-						@input="onValueChange"/>
-				</b-form-group>
-
-				<b-form-group
-					label="Height"
-					label-for="height">
-					<b-form-input
-						id="height"
-						v-model="maskSizing.height"
-						type="range"
-						min="0"
-						max="1"
-						step="0.05"
-						@input="onValueChange"/>
-				</b-form-group>
+				<mask-position
+					v-model="mask"
+					:imageSize="imageSize"
+					@input="onValueChange"/>
 
 			</section>
 
@@ -83,11 +36,16 @@
 </template>
 
 <script>
+import MaskPosition from './MaskPosition.vue';
+
 function sleep(ms) {
 	return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 export default {
+	components: {
+		MaskPosition
+	},
 	props: {
 		imageSize: {
 			type: Number,
@@ -98,7 +56,7 @@ export default {
 			required: true
 		},
 		data: {
-			type: String, // TODO: switch type to object and use facial recognition data to add mask
+			type: Object,
 			requied: true
 		}
 	},
@@ -106,15 +64,21 @@ export default {
 		return {
 			context: null,
 			originalDrawn: false,
-			maskSizing: {
-				leftOffset: 0.3,
-				topOffset: 0.4,
+			mask: {
+				leftOffset: 0.5,
+				topOffset: 0.5,
 				width: 0.5,
-				height: 0.2
+				height: 0.3,
+				rotationDeg: 0
 			}
 		};
 	},
 	methods: {
+		rotateContext(angleDegrees) {
+			this.context.translate(this.imageSize / 2, this.imageSize / 2);
+			this.context.rotate(+angleDegrees * Math.PI / 180);
+			this.context.translate(-this.imageSize / 2, -this.imageSize / 2);
+		},
 		drawOriginal() {
 			this.context.drawImage(
 				this.$refs.original,
@@ -125,13 +89,17 @@ export default {
 			);
 		},
 		drawMask(mask) {
+			if (this.mask.rotationDeg) this.rotateContext(-this.mask.rotationDeg);
+			const leftOffset = this.imageSize * (this.mask.leftOffset - 0.5 * this.mask.width);
+			const topOffset = this.imageSize * (this.mask.topOffset - 0.5 * this.mask.height);
 			this.context.drawImage(
 				this.$refs[mask],
-				this.imageSize * this.maskSizing.leftOffset,
-				this.imageSize * this.maskSizing.topOffset,
-				this.imageSize * this.maskSizing.width,
-				this.imageSize * this.maskSizing.height
+				leftOffset,
+				topOffset,
+				this.imageSize * this.mask.width,
+				this.imageSize * this.mask.height
 			);
+			if (this.mask.rotationDeg) this.rotateContext(this.mask.rotationDeg);
 		},
 		onValueChange() {
 			this.context.clearRect(0, 0, this.imageSize, this.imageSize);
