@@ -1,6 +1,45 @@
 <template>
-	<div class="MaskPosition">
+	<div class="MaskOptions">
+
+		<div class="MaskOptions__mask MaskOptions__input">
+			<b-form-group
+				label="Select a mask"
+				label-for="mask-selector">
+				<b-form-radio-group
+					id="mask-selector"
+					v-model="newMask.ref"
+					@input="onValueChange">
+					<b-form-radio value="mask1">
+						<img
+							class="MaskOptions__preview"
+							src="../assets/mask1.png"/>
+					</b-form-radio>
+					<b-form-radio value="mask2">
+						<img
+							class="MaskOptions__preview"
+							src="../assets/mask2.png"/>
+					</b-form-radio>
+				</b-form-radio-group>
+			</b-form-group>
+
+			<b-form-group
+				label="Appearance"
+				label-for="mask-appearance">
+				<b-form-radio-group
+					id="mask-appearance"
+					v-model="newMask.flip"
+					size="sm"
+					buttons
+					@input="onValueChange">
+					<b-form-radio :value="false">Normal</b-form-radio>
+					<b-form-radio :value="true">Flipped</b-form-radio>
+				</b-form-radio-group>
+			</b-form-group>
+		</div>
+
+
 		<input-slider
+			class="MaskOptions__input"
 			:label="xLabel"
 			v-model="newMask.leftOffset"
 			min="0"
@@ -9,6 +48,7 @@
 			@input="onValueChange"/>
 
 		<input-slider
+			class="MaskOptions__input"
 			:label="yLabel"
 			v-model="newMask.topOffset"
 			min="0"
@@ -17,6 +57,7 @@
 			@input="onValueChange"/>
 
 		<input-slider
+			class="MaskOptions__input"
 			:label="widthLabel"
 			v-model="newMask.width"
 			min="0"
@@ -25,6 +66,7 @@
 			@input="onValueChange"/>
 
 		<input-slider
+			class="MaskOptions__input"
 			:label="heightLabel"
 			v-model="newMask.height"
 			min="0"
@@ -33,12 +75,19 @@
 			@input="onValueChange"/>
 
 		<input-slider
+			class="MaskOptions__input"
 			:label="rotationLabel"
 			v-model="newMask.rotationDeg"
 			min="0"
 			max="360"
 			step="1"
 			@input="onValueChange"/>
+
+		<b-btn
+			size="sm"
+			variant="danger"
+			v-text="'Remove mask'"
+			@click="$emit('delete')"/>
 	</div>
 </template>
 
@@ -46,7 +95,7 @@
 import InputSlider from './InputSlider.vue';
 
 /**
- * MaskPosition is a component to control the positioning of a mask.
+ * MaskOptions is a component to control the positioning of a mask.
  *
  * The value object should look like:
  * {
@@ -102,6 +151,8 @@ export default {
 	methods: {
 		copyMask() {
 			this.newMask = {
+				ref: 'mask1',
+				flip: false,
 				leftOffset: `${this.value.leftOffset}`,
 				topOffset: `${this.value.topOffset}`,
 				width: `${this.value.width}`,
@@ -122,3 +173,23 @@ export default {
 	}
 };
 </script>
+
+<style lang="scss">
+
+.MaskOptions {
+
+	&__preview {
+		width: 75px;
+	}
+
+	&__input {
+		margin-bottom: 0.5rem !important;
+	}
+
+	&__mask {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+	}
+}
+</style>

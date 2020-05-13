@@ -1,50 +1,48 @@
 <template>
 	<div class="ImageMasker">
-		<h3 class="ImageMasker__title">Final Adjustments:</h3>
+		<h3 class="ImageMasker__title">Adjustments:</h3>
 
 		<section class="ImageMasker__content">
 
-			<canvas
+			<artbox
+				ref="artbox"
 				class="ImageMasker__canvas"
-				ref="canvas"
-				:width="imageSize"
-				:height="imageSize"/>
+				:imageSize="imageSize"
+				:masks="masks"
+				:url="url"/>
 
-			<section class="ImageMasker__controls">
+			<b-tabs class="ImageMasker__controls" v-model="tabIndex">
+				<b-tab title="Add Mask" class="ImageMasker__controls__tab">
+					<b-btn size="lg" v-text="'Add'" @click="addMask"/>
+				</b-tab>
+				<b-tab
+					class="ImageMasker__controls__tab"
+					v-for="(mask, i) in masks"
+					:key="i"
+					:title="`Mask ${i+1}`">
 
-				<mask-position
-					v-model="mask"
-					:imageSize="imageSize"
-					@input="onValueChange"/>
+					<mask-options
+						v-model="masks[i]"
+						:imageSize="imageSize"
+						@input="onValueChange"
+						@delete="onMaskDelete(i)"/>
 
-			</section>
+				</b-tab>
+			</b-tabs>
 
 		</section>
-
-		<!-- The following elements are not visible to the user -->
-		<img
-			ref="original"
-			class="ImageMasker__hidden"
-			:src="url"/>
-
-		<img
-			ref="mask1"
-			class="ImageMasker__hidden"
-			src="../assets/mask1.png"/>
 
 	</div>
 </template>
 
 <script>
-import MaskPosition from './MaskPosition.vue';
-
-function sleep(ms) {
-	return new Promise(resolve => setTimeout(resolve, ms));
-}
+import Artbox from './Artbox.vue';
+import MaskOptions from './MaskOptions.vue';
 
 export default {
 	components: {
-		MaskPosition
+		Artbox,
+		MaskOptions
 	},
 	props: {
 		imageSize: {
@@ -62,67 +60,56 @@ export default {
 	},
 	data() {
 		return {
-			context: null,
-			originalDrawn: false,
-			mask: {
+			masks: [],
+			tabIndex: 0
+		};
+	},
+	methods: {
+		addMask() {
+			this.masks.push({
+				ref: 'mask1',
+				flip: false,
 				leftOffset: 0.5,
 				topOffset: 0.5,
 				width: 0.5,
 				height: 0.3,
 				rotationDeg: 0
-			}
-		};
-	},
-	methods: {
-		rotateContext(angleDegrees) {
-			this.context.translate(this.imageSize / 2, this.imageSize / 2);
-			this.context.rotate(+angleDegrees * Math.PI / 180);
-			this.context.translate(-this.imageSize / 2, -this.imageSize / 2);
+			});
+			this.$refs.artbox.render();
 		},
-		drawOriginal() {
-			this.context.drawImage(
-				this.$refs.original,
-				0,
-				0,
-				this.imageSize,
-				this.imageSize
-			);
-		},
-		drawMask(mask) {
-			if (this.mask.rotationDeg) this.rotateContext(-this.mask.rotationDeg);
-			const leftOffset = this.imageSize * (this.mask.leftOffset - 0.5 * this.mask.width);
-			const topOffset = this.imageSize * (this.mask.topOffset - 0.5 * this.mask.height);
-			this.context.drawImage(
-				this.$refs[mask],
-				leftOffset,
-				topOffset,
-				this.imageSize * this.mask.width,
-				this.imageSize * this.mask.height
-			);
-			if (this.mask.rotationDeg) this.rotateContext(this.mask.rotationDeg);
+		async onMaskDelete(i) {
+			this.masks = this.masks.splice(i, -1);
+			await this.$nextTick();
+			this.$refs.artbox.render();
 		},
 		onValueChange() {
-			this.context.clearRect(0, 0, this.imageSize, this.imageSize);
-			this.drawOriginal();
-			this.drawMask('mask1');
+			this.$refs.artbox.render();
 		}
 	},
 	async mounted() {
-		this.context = this.$refs.canvas.getContext('2d');
-		this.$refs.original.onload = () => {
-			this.drawOriginal();
-			this.originalDrawn = true;
-		};
-		// try every half second for 10 seconds, until image is loaded
-		const retries = 20;
-		const pollTime = 500;
-		for (let i = 0; i < retries; i++) {
-			await sleep(pollTime); // eslint-disable-line no-await-in-loop
-			if (this.originalDrawn) {
-				return this.drawMask('mask1');
-			}
-		}
-		throw new Error('Error adding mask to original, original was not drawn.');
+		this.$refs.artbox.render();
+		this.data.faceAnnotations.forEach(face => {
+			const rightOfRightEyebrow = face.landmarks.find(landmark => landmark.type === 'RIGHT_OF_RIGHT_EYEBROW').position;
+			const leftOfLeftEyebrow = face.landmarks.find(landmark => landmark.type === 'LEFT_OF_LEFT_EYEBROW').position;
+			const chinGnathion = face.landmarks.find(landmark => landmark.type === 'CHIN_GNATHION').position;
+			const noseTip = face.landmarks.find(landmark => landmark.type === 'NOSE_TIP').position;
+			const mouthCenter = face.landmarks.find(landmark => landmark.type === 'MOUTH_CENTER').position;
+
+			const width = 1.5 * (rightOfRightEyebrow.x - leftOfLeftEyebrow.x) / this.imageSize;
+			const height = 1.5 * (chinGnathion.y - noseTip.y) / this.imageSize;
+			const leftOffset = mouthCenter.x / this.imageSize;
+			const topOffset = mouthCenter.y / this.imageSize;
+			const rotationDeg = -face.rollAngle;
+			this.masks.push({
+				ref: 'mask1',
+				flip: false,
+				width,
+				height,
+				leftOffset,
+				topOffset,
+				rotationDeg
+			});
+		});
 	}
 };
 
@@ -153,11 +140,17 @@ $spacing: 2rem;
 		display: flex;
 		flex-direction: column;
 		width: 50%;
+		height: 100%;
 		padding: 1rem;
-	}
 
-	&__hidden {
-		display: none;
+		&__tab {
+			display: flex;
+			padding: 0.5rem;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
+			height: 100%;
+		}
 	}
 
 }
