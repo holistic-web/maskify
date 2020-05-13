@@ -88,6 +88,28 @@ export default {
 	},
 	async mounted() {
 		this.$refs.artbox.render();
+		this.data.faceAnnotations.forEach(face => {
+			const rightOfRightEyebrow = face.landmarks.find(landmark => landmark.type === 'RIGHT_OF_RIGHT_EYEBROW').position;
+			const leftOfLeftEyebrow = face.landmarks.find(landmark => landmark.type === 'LEFT_OF_LEFT_EYEBROW').position;
+			const chinGnathion = face.landmarks.find(landmark => landmark.type === 'CHIN_GNATHION').position;
+			const noseTip = face.landmarks.find(landmark => landmark.type === 'NOSE_TIP').position;
+			const mouthCenter = face.landmarks.find(landmark => landmark.type === 'MOUTH_CENTER').position;
+
+			const width = 1.5 * (rightOfRightEyebrow.x - leftOfLeftEyebrow.x) / this.imageSize;
+			const height = 1.5 * (chinGnathion.y - noseTip.y) / this.imageSize;
+			const leftOffset = mouthCenter.x / this.imageSize;
+			const topOffset = mouthCenter.y / this.imageSize;
+			const rotationDeg = -face.rollAngle;
+			this.masks.push({
+				ref: 'mask1',
+				flip: false,
+				width,
+				height,
+				leftOffset,
+				topOffset,
+				rotationDeg
+			});
+		});
 	}
 };
 
