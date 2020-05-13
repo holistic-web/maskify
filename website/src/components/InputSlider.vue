@@ -14,6 +14,8 @@
 </template>
 
 <script>
+import { v4 as uuid } from 'uuid';
+
 export default {
 	props: {
 		label: {
@@ -37,15 +39,23 @@ export default {
 			required: true
 		}
 	},
+	data() {
+		return {
+			uuid: null
+		};
+	},
 	computed: {
 		id() {
-			return `InputSlider__${this.label}`;
+			return `InputSlider__${this.uuid}`;
 		}
 	},
 	methods: {
 		onInput(newValue) {
 			this.$emit('input', newValue);
 		}
+	},
+	created() {
+		this.uuid = uuid();
 	}
 };
 </script>
