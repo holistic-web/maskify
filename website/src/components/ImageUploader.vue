@@ -10,8 +10,8 @@
 		<section class="ImageUploader__inputs">
 			<image-uploader
 				class="ImageUploader__uploader"
-				:maxWidth="imageSize"
-				:maxHeight="imageSize"
+				:maxWidth="512"
+				:maxHeight="512"
 				:quality="0.9"
 				:autoRotate=true
 				:preview=false
@@ -43,12 +43,6 @@ export default {
 	components: {
 		ElError,
 		ImageUploader
-	},
-	props: {
-		imageSize: {
-			type: Number,
-			required: true
-		}
 	},
 	data() {
 		return {

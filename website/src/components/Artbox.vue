@@ -4,8 +4,8 @@
 		<canvas
 			class="Artbox__canvas"
 			ref="canvas"
-			:width="imageSize"
-			:height="imageSize"/>
+			:width="width"
+			:height="height"/>
 
 		<!-- The following elements are not visible to the user -->
 		<img
@@ -38,10 +38,6 @@ function rotatePoint(cx, cy, x, y, angle) {
 
 export default {
 	props: {
-		imageSize: {
-			type: Number,
-			required: true
-		},
 		url: {
 			type: String,
 			required: true
@@ -55,7 +51,9 @@ export default {
 		return {
 			context: null,
 			loadedOriginal: false,
-			loadedMask1: false
+			loadedMask1: false,
+			width: 0,
+			height: 0
 		};
 	},
 	computed: {
@@ -66,17 +64,18 @@ export default {
 		}
 	},
 	methods: {
-		render() {
+		async render() {
 			if (!this.ready) return;
+			await this.$nextTick();
 			this.drawOriginal();
 			this.masks.forEach(mask => {
 				this.drawMask(mask);
 			});
 		},
 		rotateContext(angleDegrees) {
-			this.context.translate(this.imageSize / 2, this.imageSize / 2);
-			this.context.rotate(+angleDegrees * Math.PI / 180);
-			this.context.translate(-this.imageSize / 2, -this.imageSize / 2);
+			this.context.translate(this.width / 2, this.height / 2);
+			this.context.rotate(angleDegrees * Math.PI / 180);
+			this.context.translate(-this.width / 2, -this.height / 2);
 		},
 		yFlipContext() {
 			this.context.scale(-1, 1);
@@ -86,19 +85,17 @@ export default {
 				this.$refs.original,
 				0,
 				0,
-				this.imageSize,
-				this.imageSize
+				this.width,
+				this.height
 			);
 		},
 		drawMask(mask) {
-			let leftOffset = this.imageSize * mask.leftOffset;
-			let topOffset = this.imageSize * mask.topOffset;
-			let width = this.imageSize * mask.width;
-			const height = this.imageSize * mask.height;
+			const { height } = mask;
+			let { leftOffset, topOffset, width } = mask;
 			this.context.save();
 			if (mask.rotationDeg) {
-				[leftOffset, topOffset] = rotatePoint(this.imageSize / 2, this.imageSize / 2, leftOffset, this.imageSize - topOffset, -mask.rotationDeg);
-				this.rotateContext(-mask.rotationDeg);
+				[leftOffset, topOffset] = rotatePoint(this.width / 2, this.height / 2, leftOffset, topOffset, mask.rotationDeg);
+				this.rotateContext(mask.rotationDeg);
 			}
 			if (mask.flip) {
 				this.context.scale(-1, 1);
@@ -120,6 +117,8 @@ export default {
 	mounted() {
 		this.context = this.$refs.canvas.getContext('2d');
 		this.$refs.original.onload = () => {
+			this.width = this.$refs.original.width;
+			this.height = this.$refs.original.height;
 			this.loadedOriginal = true;
 		};
 		this.$refs.mask1.onload = () => {

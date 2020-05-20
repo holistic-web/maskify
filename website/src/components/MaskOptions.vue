@@ -40,43 +40,43 @@
 
 		<input-slider
 			class="MaskOptions__input"
-			:label="xLabel"
+			:label="`Left Offset: ${newMask.leftOffset}`"
 			v-model="newMask.leftOffset"
 			min="0"
-			max="1"
+			:max="`${width}`"
 			:step="stepSize"
 			@input="onValueChange"/>
 
 		<input-slider
 			class="MaskOptions__input"
-			:label="yLabel"
+			:label="`Top Offset: ${newMask.topOffset}`"
 			v-model="newMask.topOffset"
 			min="0"
-			max="1"
+			:max="`${height}`"
 			:step="stepSize"
 			@input="onValueChange"/>
 
 		<input-slider
 			class="MaskOptions__input"
-			:label="widthLabel"
+			:label="`Width: ${newMask.width}`"
 			v-model="newMask.width"
 			min="0"
-			max="1"
+			:max="`${width}`"
 			:step="stepSize"
 			@input="onValueChange"/>
 
 		<input-slider
 			class="MaskOptions__input"
-			:label="heightLabel"
+			:label="`Height: ${newMask.height}`"
 			v-model="newMask.height"
 			min="0"
-			max="1"
+			:max="`${height}`"
 			:step="stepSize"
 			@input="onValueChange"/>
 
 		<input-slider
 			class="MaskOptions__input"
-			:label="rotationLabel"
+			:label="`Rotation (degrees): ${this.newMask.rotationDeg}`"
 			v-model="newMask.rotationDeg"
 			min="0"
 			max="360"
@@ -116,7 +116,11 @@ export default {
 			type: Object,
 			required: true
 		},
-		imageSize: {
+		width: {
+			type: Number,
+			required: true
+		},
+		height: {
 			type: Number,
 			required: true
 		}
@@ -126,27 +130,6 @@ export default {
 			newMask: null,
 			stepSize: '0.01'
 		};
-	},
-	computed: {
-		xLabel() {
-			const xPos = this.newMask.leftOffset * this.imageSize;
-			return `X Position: ${xPos}`;
-		},
-		yLabel() {
-			const yPos = this.newMask.topOffset * this.imageSize;
-			return `Y Position: ${yPos}`;
-		},
-		widthLabel() {
-			const width = this.newMask.width * this.imageSize;
-			return `Width: ${width}`;
-		},
-		heightLabel() {
-			const height = this.newMask.height * this.imageSize;
-			return `Height: ${height}`;
-		},
-		rotationLabel() {
-			return `Rotation (degrees): ${this.newMask.rotationDeg}`;
-		}
 	},
 	methods: {
 		copyMask() {
