@@ -100,8 +100,9 @@ export default {
 			const leftOffset = mouthCenter.x;
 			const topOffset = mouthCenter.y;
 			const rotationDeg = face.rollAngle;
+			const ref = ['mask1', 'mask2'][Math.floor(Math.random() * 2)];
 			this.masks.push({
-				ref: 'mask1',
+				ref,
 				flip: false,
 				width,
 				height,
