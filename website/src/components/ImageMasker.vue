@@ -7,7 +7,6 @@
 			<artbox
 				ref="artbox"
 				class="ImageMasker__canvas"
-				:imageSize="imageSize"
 				:masks="masks"
 				:url="url"/>
 
@@ -23,7 +22,8 @@
 
 					<mask-options
 						v-model="masks[i]"
-						:imageSize="imageSize"
+						:width="$refs.artbox.width"
+						:height="$refs.artbox.height"
 						@input="onValueChange"
 						@delete="onMaskDelete(i)"/>
 
@@ -69,10 +69,10 @@ export default {
 			this.masks.push({
 				ref: 'mask1',
 				flip: false,
-				leftOffset: 0.5,
-				topOffset: 0.5,
-				width: 0.5,
-				height: 0.3,
+				leftOffset: 0,
+				topOffset: 0,
+				width: 0,
+				height: 0,
 				rotationDeg: 0
 			});
 			this.$refs.artbox.render();
@@ -95,11 +95,11 @@ export default {
 			const noseTip = face.landmarks.find(landmark => landmark.type === 'NOSE_TIP').position;
 			const mouthCenter = face.landmarks.find(landmark => landmark.type === 'MOUTH_CENTER').position;
 
-			const width = 1.5 * (rightOfRightEyebrow.x - leftOfLeftEyebrow.x) / this.imageSize;
-			const height = 1.5 * (chinGnathion.y - noseTip.y) / this.imageSize;
-			const leftOffset = mouthCenter.x / this.imageSize;
-			const topOffset = mouthCenter.y / this.imageSize;
-			const rotationDeg = -face.rollAngle;
+			const width = Math.abs(1.5 * (((rightOfRightEyebrow.x - leftOfLeftEyebrow.x) ^ 2 + (rightOfRightEyebrow.y - leftOfLeftEyebrow.y) ^ 2) ^ 0.5));
+			const height = Math.abs(1.5 * (((chinGnathion.x - noseTip.x) ^ 2 + (chinGnathion.y - noseTip.y) ^ 2) ^ 0.5));
+			const leftOffset = mouthCenter.x;
+			const topOffset = mouthCenter.y;
+			const rotationDeg = face.rollAngle;
 			this.masks.push({
 				ref: 'mask1',
 				flip: false,

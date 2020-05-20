@@ -7,7 +7,6 @@
 
 		<image-uploader
 			v-if="!imageUrl"
-			:imageSize="imageSize"
 			@uploaded="onImageUpload"/>
 
 		<span v-if="imageUrl && !imageData">
