@@ -25,6 +25,17 @@
 </template>
 
 <script>
+
+// thanks Stack Overflow! https://stackoverflow.com/questions/17410809/how-to-calculate-rotation-in-2d-in-javascript
+function rotatePoint(cx, cy, x, y, angle) {
+	const radians = (Math.PI / 180) * angle;
+	const cos = Math.cos(radians);
+	const sin = Math.sin(radians);
+	const nx = (cos * (x - cx)) + (sin * (y - cy)) + cx;
+	const ny = (cos * (y - cy)) - (sin * (x - cx)) + cy;
+	return [nx, ny];
+}
+
 export default {
 	props: {
 		imageSize: {
@@ -80,17 +91,22 @@ export default {
 			);
 		},
 		drawMask(mask) {
-			let leftOffset = this.imageSize * (mask.leftOffset - 0.5 * mask.width);
-			const topOffset = this.imageSize * (mask.topOffset - 0.5 * mask.height);
+			let leftOffset = this.imageSize * mask.leftOffset;
+			let topOffset = this.imageSize * mask.topOffset;
 			let width = this.imageSize * mask.width;
 			const height = this.imageSize * mask.height;
 			this.context.save();
-			if (mask.rotationDeg) this.rotateContext(-mask.rotationDeg);
+			if (mask.rotationDeg) {
+				[leftOffset, topOffset] = rotatePoint(this.imageSize / 2, this.imageSize / 2, leftOffset, this.imageSize - topOffset, -mask.rotationDeg);
+				this.rotateContext(-mask.rotationDeg);
+			}
 			if (mask.flip) {
 				this.context.scale(-1, 1);
 				width *= -1;
 				leftOffset *= -1;
 			}
+			leftOffset -= width / 2;
+			topOffset -= height / 2;
 			this.context.drawImage(
 				this.$refs[mask.ref],
 				leftOffset,

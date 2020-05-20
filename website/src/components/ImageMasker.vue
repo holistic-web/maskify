@@ -95,8 +95,8 @@ export default {
 			const noseTip = face.landmarks.find(landmark => landmark.type === 'NOSE_TIP').position;
 			const mouthCenter = face.landmarks.find(landmark => landmark.type === 'MOUTH_CENTER').position;
 
-			const width = 1.5 * (rightOfRightEyebrow.x - leftOfLeftEyebrow.x) / this.imageSize;
-			const height = 1.5 * (chinGnathion.y - noseTip.y) / this.imageSize;
+			const width = (((rightOfRightEyebrow.x - leftOfLeftEyebrow.x) ^ 2 + (rightOfRightEyebrow.y - leftOfLeftEyebrow.y) ^ 2) ^ 0.5) * 1.5 / this.imageSize;
+			const height = (((chinGnathion.x - noseTip.x) ^ 2 + (chinGnathion.y - noseTip.y) ^ 2) ^ 0.5) * 1.5 / this.imageSize;
 			const leftOffset = mouthCenter.x / this.imageSize;
 			const topOffset = mouthCenter.y / this.imageSize;
 			const rotationDeg = -face.rollAngle;
